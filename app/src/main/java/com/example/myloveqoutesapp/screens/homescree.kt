@@ -2,6 +2,9 @@ package com.example.myloveqoutesapp.screens
 
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -25,16 +28,23 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -47,6 +57,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.myloveqoutesapp.MainActivity
 import com.example.myloveqoutesapp.R
 import com.example.myloveqoutesapp.model.Screen
 import kotlinx.coroutines.launch
@@ -66,11 +77,41 @@ private val otherCategories = listOf(
     R.drawable.ic13_pickup
 )
 
-
-
 @SuppressLint("SuspiciousIndentation")
 @Composable
 fun HomeScreen(navController: NavHostController) {
+    val scopes = rememberCoroutineScope()
+    var showExitDialog by remember { mutableStateOf(false) }
+
+    BackHandler {
+        showExitDialog = true // Show exit confirmation dialog
+    }
+
+    if (showExitDialog) {
+        val context = LocalContext.current
+
+        // Show a dialog asking if the user wants to exit the app
+        AlertDialog(
+            onDismissRequest = { showExitDialog = false },
+            title = { Text(text = "Exit App?") },
+            text = { Text("Do you really want to exit the app?") },
+            confirmButton = {
+                Button(onClick = {
+                    showToast(context)
+                }) { // Add logic to exit the app
+                    Text("Yes")
+                }
+            },
+            dismissButton = {
+                Button(onClick = {
+                    showExitDialog = false
+                }) {
+                    Text("No")
+                }
+            }
+        )
+    }
+
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
@@ -302,6 +343,27 @@ fun HomeScreen(navController: NavHostController) {
             }
         }
 }
+
+
+fun showToast(context: Context) {
+    (context as? MainActivity)?.finish() // or call finish()
+
+}
+//@Composable
+//fun exitApp() {
+//    val context = LocalContext.current
+//
+//    // Show Toast message before exiting
+//    Toast.makeText(context, "Exiting the app...", Toast.LENGTH_SHORT).show()}
+//}
+
+//@Composable
+//fun exitApp(val context:Context) {
+////    val context = LocalContext.current
+//
+//    // Show Toast message before exiting
+//    Toast.makeText(context, "Exiting the app...", Toast.LENGTH_SHORT).show()
+//}
 
 @Composable
 fun HorizontalPopularImageList(imageList: List<Int>, navController: NavHostController) { // Accept a list of image resource IDs

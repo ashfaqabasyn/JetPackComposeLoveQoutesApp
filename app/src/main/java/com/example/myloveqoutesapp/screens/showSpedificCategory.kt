@@ -1,6 +1,5 @@
 package com.example.myloveqoutesapp.screens
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -155,16 +154,9 @@ private fun WallpaperItem(
 }
 
 
-
-
-
-
-
 @Composable
 fun showSpecificCategory(navHostController: NavHostController,categoryId: Int) {
 
-
-    Log.d("TAG1111111", "showSpecificCategory: $categoryId")
     val listOfTitles = listOf(
         "Valentine Quotes",
         "Breakup Quotes",
@@ -477,7 +469,7 @@ fun showSpecificCategory(navHostController: NavHostController,categoryId: Int) {
 
 
             Text(
-                text = "Love Quotes",
+                text = listOfTitles[categoryId].toString(),
                 color = Color.Red,
                 fontSize = 14.sp, // Use sp for font size
                 fontWeight = FontWeight.Bold, // Set font weight to Bold
